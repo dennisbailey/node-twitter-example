@@ -3,50 +3,51 @@ var twitterStream = angular.module('myApp', ['chart.js'])
 twitterStream.controller("mainCtrl", ['$scope', 'socket',
 function ($scope, socket) {
   //chart labels
-  $scope.labels = ["iPhone", "iPad", "Android", "Web Client", "Other"];
+  $scope.labels = ["English", "Español", "Français", "Unknown", "Other"];
   //chart colors
   $scope.colors = ['#6c6a6c','#000000','#7FFD1F','#EC872A', '#9527C2'];
   //intial data values
-  $scope.trumpData = [0,0,0,0,0];
-  $scope.sandersData = [0,0,0,0,0];
+  $scope.supermanData = [0,0,0,0,0];
+  $scope.batmanData = [0,0,0,0,0];
 
   socket.on('newTweet', function (tweet) {
+    console.log(tweet.lang);
     $scope.tweet = tweet.text
     $scope.user = tweet.user.screen_name
     //parse source from payload
-    var source = tweet.source.split('>')[1].split('<')[0].split(' ')[2]
+    var lang = tweet.lang
     //all hashtags in the tweet
     var hashtags = tweet.entities.hashtags.map(function(el){
       return el.text.toLowerCase()
     })
 
     //check source and increment for #trump tweets
-    if (hashtags.indexOf('trump') !== -1){
-      switch (source) {
-        case 'iPhone': $scope.trumpData[0]++
+    if (hashtags.indexOf('superman') !== -1){
+      switch (lang) {
+        case 'en': $scope.supermanData[0]++
         break;
-        case 'iPad': $scope.trumpData[1]++
+        case 'es': $scope.supermanData[1]++
         break;
-        case 'Android': $scope.trumpData[2]++
+        case 'fr': $scope.supermanData[2]++
         break;
-        case 'Web': $scope.trumpData[3]++
+        case 'und': $scope.supermanData[3]++
         break;
-        default: $scope.trumpData[4]++
+        default: $scope.supermanData[4]++
       }
     }
 
     //check source and increment for #feelthebern tweets
-    else if (hashtags.indexOf('feelthebern') !== -1) {
-      switch (source) {
-        case 'iPhone': $scope.sandersData[0]++
+    else if (hashtags.indexOf('batman') !== -1) {
+      switch (lang) {
+        case 'en': $scope.batmanData[0]++
         break;
-        case 'iPad': $scope.sandersData[1]++
+        case 'es': $scope.batmanData[1]++
         break;
-        case 'Android': $scope.sandersData[2]++
+        case 'fr': $scope.batmanData[2]++
         break;
-        case 'Web': $scope.sandersData[3]++
+        case 'und': $scope.batmanData[3]++
         break;
-        default: $scope.sandersData[4]++
+        default: $scope.batmanData[4]++
       }
     }
   });
